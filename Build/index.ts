@@ -54,18 +54,19 @@ function strategiesFor(name: string) {
 }
 
 function main(): void {
-  // Source/broker：券商，其中 topstep.conf 单独拆成 Topstep 规则集（便于配成直连）
+  // Source/broker：券商，其中 topstep.conf 单独拆成 Topstep 规则集（便于配成直连），firstrade.conf 单独拆成 Firstrade 规则集（便于配成代理）
   const brokerDir = path.join(SOURCE_ROOT, 'broker');
-  const brokerFiles = listSources(brokerDir).filter((file) => file !== 'topstep.conf');
+  const brokerFiles = listSources(brokerDir).filter((file) => file !== 'topstep.conf' && file !== 'firstrade.conf');
   const brokerOutput = readSources(brokerDir, brokerFiles, 'Broker');
   const topstepOutput = readSources(brokerDir, ['topstep.conf'], 'Topstep');
+  const firstradeOutput = readSources(brokerDir, ['firstrade.conf'], 'Firstrade');
 
   // Source/bank：银行，一般配成直连
   const bankDir = path.join(SOURCE_ROOT, 'bank');
   const bankOutput = readSources(bankDir, listSources(bankDir), 'Bank');
 
-  const outputs = [brokerOutput, topstepOutput, bankOutput];
-  const names = ['Broker', 'Topstep', 'Bank'];
+  const outputs = [brokerOutput, topstepOutput, firstradeOutput, bankOutput];
+  const names = ['Broker', 'Topstep', 'Firstrade', 'Bank'];
   let fileCount = 0;
 
   for (let i = 0; i < outputs.length; i++) {
